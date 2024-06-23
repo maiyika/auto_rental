@@ -17,9 +17,11 @@ import com.coder.rental.vo.TokenVo;
 import com.coder.rental.vo.UserInfoVo;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +44,8 @@ public class AuthController {
 
 	@Resource
 	private RedisUtils redisUtils;
+	@Resource
+	private RouteTreeUtils RouteTreeUtils;
 	@Resource
 	private IRoleService roleService;
 
@@ -76,7 +80,7 @@ public class AuthController {
 		return Result.success(tokenVo).setMessage("刷新token成功");
 	}
 
-	@GetMapping("/info")
+	@GetMapping("/getInfo")
 	public Result getUserInfo() {
 		//从security上下文中获取用户信息
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,6 +96,7 @@ public class AuthController {
 
 	/**
 	 * 获取用户菜单列表
+	 *
 	 * @return Result 当前用户的菜单列表
 	 */
 	@GetMapping("/menuList")
@@ -102,9 +107,25 @@ public class AuthController {
 		}
 		User user = (User) authentication.getPrincipal();
 		List<Permission> permissions = user.getPermissions();
-		//构建路由菜单, 并将permission_type为2的'按钮'移除, 只保留菜单
+		//构建路由菜单, 并将permission_type为2的'按钮'移除, 保留菜单和其子菜单
 		permissions.removeIf(permission -> permission.getPermissionType() == 2);
 		List<RouteVo> routeVos = RouteTreeUtils.buildRouteTree(permissions, 0);
 		return Result.success(routeVos).setMessage("获取菜单列表成功");
+	}
+
+	@PostMapping("/logout")
+	public Result logout( HttpServletRequest request , HttpServletResponse response) {
+		String token = request.getHeader("token");
+		if ( StrUtil.isEmpty(token) ) {
+			token = request.getParameter("token");
+		}
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if ( authentication != null ) {
+			redisUtils.del("token:" + token);   //登出需删除redis中的token
+			SecurityContextLogoutHandler securityContextHolder = new SecurityContextLogoutHandler();
+			securityContextHolder.logout(request,response,authentication);
+			return Result.success().setMessage("退出登录成功");
+		}
+		return Result.fail().setMessage("用户未登录");
 	}
 }
