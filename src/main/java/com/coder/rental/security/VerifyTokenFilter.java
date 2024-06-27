@@ -90,7 +90,7 @@ public class VerifyTokenFilter extends OncePerRequestFilter {
 						null, userDetails.getAuthorities());
 		authentication.setDetails(new WebAuthenticationDetailsSource()
 				.buildDetails(request));
-		//设置认证信息到上下文
+		//设置认证信息到上下文, 以便后续获取用户信息
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 	}
 

@@ -1,5 +1,6 @@
 package com.coder.rental.vo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.List;
  * @date 23/6/2024
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY)  //为空的字段不返回
 public class RouteVo {
 	private String path;
 	private String component;

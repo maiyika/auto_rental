@@ -1,5 +1,6 @@
 package com.coder.rental.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.coder.rental.entity.AutoMaker;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -12,5 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2024-06-16
  */
 public interface IAutoMakerService extends IService<AutoMaker> {
+
+	Page<AutoMaker> search( int start, int size, AutoMaker autoMaker );
 
 }
