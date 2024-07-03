@@ -23,4 +23,23 @@
         where u.id = #{value}
         order by p.id, p.order_num
     </select>
+    <select id="selectPermissionListByRoleId" resultType="com.coder.rental.entity.Permission"
+            parameterType="java.lang.Integer">
+        select distinct p.id,
+                        p.permission_label,
+                        p.pid,
+                        p.parent_label,
+                        p.permission_code,
+                        p.route_path,
+                        p.route_name,
+                        p.route_url,
+                        p.permission_type,
+                        p.order_num,
+                        p.icon
+        from sys_role r
+                 left join sys_role_permission rp on r.id = rp.role_id
+                 left join sys_permission p on rp.permission_id = p.id
+        where r.id = #{value}
+        order by p.id, p.order_num
+    </select>
 </mapper>

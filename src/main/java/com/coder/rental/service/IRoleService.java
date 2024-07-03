@@ -20,4 +20,8 @@ public interface IRoleService extends IService<Role> {
 	public List<String> selectRoleNameListByPermissionId( Integer permissionId );
 
 	Page<Role> selectList( Page<Role> page, Role role );
+
+	boolean hasUser( Integer roleId );
+
+	boolean deleteRole( String ids );
 }
