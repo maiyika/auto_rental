@@ -58,4 +58,15 @@ public class RouteTreeUtils {
 				});
 		return tree;
 	}
+
+	public static List<Permission> buildMenuTree(List<Permission> list, int pid){
+		List<Permission> res = new ArrayList<>();
+		Optional.ofNullable(list).orElse(new ArrayList<>())
+				.stream().filter(permission -> permission != null && permission.getPid() == pid)
+				.forEach(permission -> {
+					permission.setChildren(buildMenuTree(list, permission.getId()));
+					res.add(permission);
+				});
+		return res;
+	}
 }

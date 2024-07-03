@@ -30,4 +30,5 @@ public class AutoMakerServiceImpl extends ServiceImpl<AutoMakerMapper, AutoMaker
 		return page(page, queryWrapper);
 	}
 
+
 }

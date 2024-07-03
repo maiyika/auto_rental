@@ -59,4 +59,5 @@ public class AutoMakerController {
 		boolean isUpdated = autoMakerService.updateById(autoMaker);
 		return isUpdated ? Result.success() : Result.fail();
 	}
+
 }

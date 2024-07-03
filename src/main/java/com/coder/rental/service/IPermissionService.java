@@ -15,4 +15,8 @@ import java.util.List;
  */
 public interface IPermissionService extends IService<Permission> {
 	List<Permission> selectPermissionListByUserId(Integer userId);
+	List<Permission> selectList();
+
+	List<Permission> selectTree();
+	boolean hasChildren(Integer id);
 }

@@ -1,8 +1,7 @@
 package com.coder.rental.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
@@ -42,9 +41,11 @@ public class Role implements Serializable {
     private Integer createrId;
 
     @ApiModelProperty("创建时间")
+    @TableField(fill= FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")
+    @TableField(fill= FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @ApiModelProperty("备注")

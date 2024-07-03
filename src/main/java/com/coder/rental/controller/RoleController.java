@@ -1,11 +1,18 @@
 package com.coder.rental.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.coder.rental.entity.Role;
+import com.coder.rental.entity.User;
+import com.coder.rental.service.IRoleService;
+import com.coder.rental.utils.Result;
+import jakarta.annotation.Resource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author Barry
@@ -14,5 +21,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/rental/role")
 public class RoleController {
+	@Resource
+	private IRoleService roleService;
 
+	@PostMapping("/{start}{size}")
+	public Result search( @PathVariable int start,
+	                      @PathVariable int size,
+	                      @RequestBody Role role ) {
+		//从SecurityContextHolder中获取当前用户信息, 也可以从token中获取useridrent
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = (User) authentication.getPrincipal();
+		role.setCreaterId(user.getId());
+		Page<Role> page = new Page<>(start,size);
+		return Result.success(roleService.selectList(page, role));
+	}
 }
